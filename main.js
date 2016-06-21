@@ -1,30 +1,53 @@
+/*
+    This extension was written to help you build one.
+    Just read the source and follow the instructions.
+
+    The "main.js" is the entry point for your extension.
+    It is executed by the editor at application startup.
+*/
+
+
+/*  These are jslint options. Using linters is recommended, but optional */
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
-/*global define, $, brackets, window */
+/*global define, $, brackets */
 
-/** Simple extension that adds a "File > Hello World" menu item */
+
+/*
+    In Brackets, all js files are modules handled by requirejs.
+    Leave it that way to conform to Brackets coding standards.
+*/
 define(function (require, exports, module) {
-    "use strict";
 
-    var CommandManager = brackets.getModule("command/CommandManager"),
-        Menus          = brackets.getModule("command/Menus");
+	// This enforces the use of javascript strict mode (again, a good practice).
+	'use strict';
+
+	// The CommandManager registers command IDs with functions
+	var CommandManager = brackets.getModule("command/CommandManager"),
+		// This will let us add menus items
+		Menus = brackets.getModule("command/Menus"),
+		// This holds the list of all default commands
+		Commands = brackets.getModule("command/Commands"),
+		// This lets us do things through the native app shell
+		NativeApp = brackets.getModule("utils/NativeApp");
+
+	/*
+	    The function which will be called when the command is
+	    executed (ie when users select the menu)
+	*/
+	function resetAchievement() {
+		// This is how you open a webpage in the current browser window
+		console.log('reset achievement');
+
+	}
+
+	CommandManager.register('Reset Achievement', 'jiedara.achievement.resetAchievement', resetAchievement);
 
 
-    // Function to run when the menu item is clicked
-    function handleHelloWorld() {
-        window.alert("Hello, world!");
-    }
+	//create my own menu
+	var menu = Menus.addMenu('Achievement', 'jiedara.achievement');
 
+	//submenu
+	menu.addMenuDivider();
+	menu.addMenuItem('jiedara.achievement.resetAchievement', [], Menus.AFTER);
 
-    // First, register a command - a UI-less object associating an id to a handler
-    var MY_COMMAND_ID = "helloworld.sayhello";   // package-style naming to avoid collisions
-    CommandManager.register("Hello World", MY_COMMAND_ID, handleHelloWorld);
-
-    // Then create a menu item bound to the command
-    // The label of the menu item is the name we gave the command (see above)
-    var menu = Menus.getMenu(Menus.AppMenuBar.FILE_MENU);
-    menu.addMenuItem(MY_COMMAND_ID);
-
-    // We could also add a key binding at the same time:
-    //menu.addMenuItem(MY_COMMAND_ID, "Ctrl-Alt-W");
-    // (Note: "Ctrl" is automatically mapped to "Cmd" on Mac)
 });
